@@ -7,7 +7,7 @@ const path = require('path');
 app.use(cors());
 
 // 정적 파일 제공
-app.use(express.static(path.join(__dirname, 'four.csv')));
+app.use(express.static(path.join(__dirname, 'back')));
 
 // 서버 시작
 const PORT = process.env.PORT || 3000;
