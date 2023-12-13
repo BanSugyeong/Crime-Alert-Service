@@ -9,19 +9,11 @@
     
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
-            <div class="title">
-                <h2>오늘의 강남구 범죄율</h2>
-            </div>
             <div class="close-area" onclick="hideModal()">X</div>
-            <div class="content">
-                오늘의 날씨
-                <!-- <select name="weather">
-                    <option value="">===선택===</option>    
-                    <option value="맑음">맑음</option>
-                    <option value="흐림">흐림</option>
-                    <option value="비">비</option>
-                    <option value="눈">눈</option>
-                </select>       -->
+            <div class="content", id="modalContent">
+                <!-- <h1>오늘의 강남구 범죄율</h1>
+                <h1 style="font-size: 50px;">"8.6%"</h1><br>
+                <h3>살인 : 0.1% <br> 강도 : 0.2% <br>강간/강제추행 : 6.7% <br>절도 : 25.9% <br>폭력 : 51.6%</h3>    -->
             </div>
         </div>
     </div>
@@ -42,7 +34,7 @@
             <div id="news-container">
                 <h2>오늘의 뉴스</h2>
                 <div id="news-list"></div>
-                <img src="웹페이지 강남구.png" alt="강남구 최근 3년 범죄지수" style="width: 100%; max-width: 600px; margin-top: 20px;">
+                <img src="웹페이지 강남구.png" alt="강남구 최근 3년 범죄지수" style="width: 100%; max-width: 600px; margin-top: 5px;">
             </div>
             <ul id="placesList"></ul>
             <div id="pagination"></div>
@@ -51,6 +43,26 @@
 
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f5af0193d48f025964e7573bbe6bd44c&libraries=clusterer"></script>
     <script>
+        function addClickEvent(marker, info) {
+            kakao.maps.event.addListener(marker, 'click', function () {
+                showModalAndInfo(info);
+            });
+        }
+
+        function showModalAndInfo(info) {
+            showModal();
+            updateModalContent(info);
+        }
+
+        function updateModalContent(info) {
+            var modalContent = document.getElementById("modalContent");
+            modalContent.innerHTML = `
+                <h1>${info.title} 범죄율</h1>
+                <h1 style="font-size: 50px;">"${info.rate}"</h1><br>
+                <h3>${info.details}</h3>
+            `;
+        }
+
         function bringModalToFront() {
             var modal = document.getElementById("modal");
             modal.style.zIndex = "9999"; // 또는 더 높은 숫자로 설정
@@ -66,12 +78,6 @@
         function hideModal() {
             var modal = document.getElementById("modal");
             modal.style.display = "none";
-        }
-
-        // 모달 내용을 업데이트하는 함수
-        function updateModalContent(content) {
-            var modalContent = document.querySelector("#modal .content");
-            modalContent.innerHTML = content;
         }
 
         // 웹 페이지에 뉴스 표시 함수
@@ -154,6 +160,34 @@
 
             var markers = [];
 
+            var 구_정보들 = [
+                { title: '강남구', rate: '8.6%', details: '살인: 0.1%,<br> 강도: 0.2%,<br> 강간/강제추행: 6.7%,<br> 절도: 25.9%,<br> 폭력: 51.6%' },
+                { title: '강동구', rate: '3.84%', details: '살인: 0.4%,<br> 강도: 0.0%,<br> 강간/강제추행: 4.2%,<br> 절도: 43.0%,<br> 폭력: 52.3%' },
+                { title: '강북구', rate: '3.42%', details: '살인: -0.2%,<br> 강도: -0.1%,<br> 강간/강제추행: 6.3%,<br> 절도: 27.1%,<br> 폭력: 54.2%' },
+                { title: '강서구', rate: '4.59%', details: '살인: 0.0%,<br> 강도: -0.5%,<br> 강간/강제추행: 7.1%,<br> 절도: 48.3%,<br> 폭력: 44.7%' },
+                { title: '관악구', rate: '3.37%', details: '살인: 1.0%,<br> 강도: 0.3%,<br> 강간/강제추행: 6.5%,<br> 절도: 64.5%,<br> 폭력: 28.3%' },
+                { title: '광진구', rate: '4.2%', details: '살인: 0.5%,<br> 강도: 0.1%,<br> 강간/강제추행: 2.3%,<br> 절도: 53.6%,<br> 폭력: 47.6%' },
+                { title: '구로구', rate: '3.38%', details: '살인: 1.2%,<br> 강도: -0.1%,<br> 강간/강제추행: 3.5%,<br> 절도: 46.2%,<br> 폭력: 45.3%' },
+                { title: '금천구', rate: '2.47%', details: '살인: 0.2%,<br> 강도: 0.3%,<br> 강간/강제추행: 3.4%,<br> 절도: 55.5%,<br> 폭력: 46.8%' },
+                { title: '노원구', rate: '3.55%', details: '살인: 0.2%,<br> 강도: 0.0%,<br> 강간/강제추행: 5.0%,<br> 절도: 65.5%,<br> 폭력: 29.3%' },
+                { title: '도봉구', rate: '4.72%', details: '살인: 0.0%,<br> 강도: 0.6%,<br> 강간/강제추행: 5.1%,<br> 절도: 43.9%,<br> 폭력: 50.5%' },
+                { title: '동대문구', rate: '1.5%', details: '살인: -0.3%,<br> 강도: -0.3%,<br> 강간/강제추행: 0.9%,<br> 절도: 47.0%,<br> 폭력: 52.2%' },
+                { title: '동작구', rate: '3.18%', details: '살인: 0.1%,<br> 강도: 0.0%,<br> 강간/강제추행: 2.6%,<br> 절도: 55.4%,<br> 폭력: 41.7%' },
+                { title: '마포구', rate: '3.19%', details: '살인: 0.2%,<br> 강도: 0.5%,<br> 강간/강제추행: 5.0%,<br> 절도: 54.7%,<br> 폭력: 39.7%' },
+                { title: '서대문구', rate: '6.77%', details: '살인: -0.1%,<br> 강도: 0.0%,<br> 강간/강제추행: 8.9%,<br> 절도: 28.3%,<br> 폭력: 38.3%' },
+                { title: '서초구', rate: '2.82%', details: '살인: 0.5%,<br> 강도: 0.1%,<br> 강간/강제추행: 4.2%,<br> 절도: 53.3%,<br> 폭력: 42.7%' },
+                { title: '성동구', rate: '5.51%', details: '살인: -0.2%,<br> 강도: 0.0%,<br> 강간/강제추행: 7.8%,<br> 절도: 46.2%,<br> 폭력: 46.1%' },
+                { title: '성북구', rate: '2.98%', details: '살인: 0.4%,<br> 강도: 0.3%,<br> 강간/강제추행: 5.3%,<br> 절도: 44.0%,<br> 폭력: 49.9%' },
+                { title: '송파구', rate: '6.57%', details: '살인: 0.0%,<br> 강도: 0.1%,<br> 강간/강제추행: 3.7%,<br> 절도: 38.0%,<br> 폭력: 43.8%' },
+                { title: '양천구', rate: '3.6%', details: '살인: -0.1%,<br> 강도: 0.0%,<br> 강간/강제추행: 4.2%,<br> 절도: 29.0%,<br> 폭력: 66.6%' },
+                { title: '영등포구', rate: '4.97%', details: '살인: 0.3%,<br> 강도: 0.0%,<br> 강간/강제추행: 4.8%,<br> 절도: 41.3%,<br> 폭력: 44.5%' },
+                { title: '용산구', rate: '4.7%', details: '살인: 0.0%,<br> 강도: 0.2%,<br> 강간/강제추행: 8.5%,<br> 절도: 30.3%,<br> 폭력: 55.6%' },
+                { title: '은평구', rate: '3.61%', details: '살인: 0.0%,<br> 강도: 0.2%,<br> 강간/강제추행: 2.9%,<br> 절도: 51.0%,<br> 폭력: 45.9%' },
+                { title: '종로구', rate: '2.28%', details: '살인: -0.5%,<br> 강도: -0.3%,<br> 강간/강제추행: -5.4%,<br> 절도: 56.7%,<br> 폭력: 49.3%' },
+                { title: '중구', rate: '3.87%', details: '살인: 0.0%,<br> 강도: 0.6%,<br> 강간/강제추행: 2.6%,<br> 절도: 34.1%,<br> 폭력: 51.1%' },
+                { title: '중랑구', rate: '2.29%', details: '살인: 0.1%,<br> 강도: 0.6%,<br> 강간/강제추행: 15.4%,<br> 절도: 46.7%,<br> 폭력: 36.0%' }
+            ];
+
             for (var i = 0; i < 데이터.length; i++) {
                 var marker = new kakao.maps.Marker({
                     position: new kakao.maps.LatLng(데이터[i][0], 데이터[i][1]),
@@ -166,24 +200,10 @@
 
                 markers.push(marker);
 
-                kakao.maps.event.addListener(
-                    marker,
-                    'mouseover',
-                    makeOverListener(map, marker, infowindow)
-                );
+                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
 
-                kakao.maps.event.addListener(
-                    marker,
-                    'mouseout',
-                    makeOutListener(infowindow)
-                );
-
-                if (i === 0) {
-                    kakao.maps.event.addListener(marker, 'click', function () {
-                        showModal(); // 모달 표시
-                        updateModalContent('강남구에 대한 내용'); // 모달 내용 업데이트
-                    });
-                }
+                addClickEvent(marker, 구_정보들[i]);
             }
 
             clusterer.addMarkers(markers);
