@@ -10,10 +10,19 @@
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
             <div class="title">
-                <h2 id="modalTitle"></h2>
+                <h2>오늘의 강남구 범죄율</h2>
             </div>
             <div class="close-area" onclick="hideModal()">X</div>
-            <div class="content" id="modalContent"></div>
+            <div class="content">
+                오늘의 날씨
+                <!-- <select name="weather">
+                    <option value="">===선택===</option>    
+                    <option value="맑음">맑음</option>
+                    <option value="흐림">흐림</option>
+                    <option value="비">비</option>
+                    <option value="눈">눈</option>
+                </select>       -->
+            </div>
         </div>
     </div>
     
@@ -98,33 +107,6 @@
             initializeMap(); // 지도 초기화 함수 호출
         };
 
-        // 클릭한 마커의 정보를 모달에 표시하는 함수
-        function showLocationInfo(locationName, details) {
-            showModal();
-            updateModalContent(details);
-            updateModalTitle(`오늘의 ${locationName} 범죄율`);
-        }
-
-        // 모달 제목 업데이트 함수
-        function updateModalTitle(title) {
-            var modalTitle = document.getElementById("modalTitle");
-            modalTitle.innerText = title;
-        }
-
-        // 예시: 강남구 마커 클릭 시 모달 표시
-        kakao.maps.event.addListener(markers[0], 'click', function () {
-            var locationName = '강남구';
-            var details = '강남구에 대한 내용';
-            showLocationInfo(locationName, details);
-        });
-
-        // 예시: 강동구 마커 클릭 시 모달 표시
-        kakao.maps.event.addListener(markers[1], 'click', function () {
-            var locationName = '강동구';
-            var details = '강동구에 대한 내용';
-            showLocationInfo(locationName, details);
-        });
-        
         // 지도 초기화 함수
         function initializeMap() {
             var mapContainer = document.getElementById('map');
