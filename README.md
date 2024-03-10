@@ -21,3 +21,10 @@
 
 ### 3. 서버 구축
 - node.js 말고 다른 서버 제대로 구축하기
+
+
+## git 사용법
+- git pull origin master
+- git add .
+- git commit -m "2024-03-10/내용"
+- git push origin master
