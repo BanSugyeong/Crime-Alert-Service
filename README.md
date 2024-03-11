@@ -22,8 +22,14 @@
 ### 3. 서버 구축
 - node.js 말고 다른 서버 제대로 구축하기
 
-
 ## git 사용법
+### 초기설정
+- git config --global user.email "이메일 주소"
+- git config --global user.name "깃허브 이름"
+- git remote add origin https://github.com/깃허브 이름/연결할 레파지토리 주소.git
+  - ex) git remote add origin https://github.com/BanSugyeong/xxx.git
+
+### pull & push
 - git pull origin master
 - git add .
 - git commit -m "2024-03-10/내용"
