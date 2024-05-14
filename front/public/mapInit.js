@@ -14,6 +14,9 @@ function updateModalContent(info) {
     var isFavorited = checkIfFavorited(info.title);
     var starClass = isFavorited ? 'favorite-icon favorited' : 'favorite-icon';
     modalContent.innerHTML = `
+        <div class="favorite-container">
+            <div class="${starClass}" id="favoriteIcon" onclick="toggleFavorite('${info.title}', this)">★</div>
+        </div>
         <h1>${info.title} 범죄율</h1>
         <h1 style="font-size: 50px;">"${info.rate}"</h1><br>
         <h3>${info.details}</h3>

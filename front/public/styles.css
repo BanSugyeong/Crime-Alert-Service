@@ -163,14 +163,12 @@
 }
 
 #modal .modal-window {
-
   background: rgba( 69, 139, 197, 0.70 );
   box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
   backdrop-filter: blur( 13.5px );
   -webkit-backdrop-filter: blur( 13.5px );
   border-radius: 10px;
   border: 1px solid rgba( 255, 255, 255, 0.18 );
-
   width: 400px;
   height: 400px;
   position: relative;
@@ -281,14 +279,14 @@
 
 /* 즐겨찾기 스타일 */
 .favorite-container {
-  position: absolute;
-  top: 10px;
+  position: fixed;
+  top: 5px;
   left: 10px;
 }
 
 .favorite-icon {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 30px;
   color: gray;
 }
 
