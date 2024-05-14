@@ -56,7 +56,11 @@
   background: #fff;
 }
 
-#menu_wrap hr, #left_menu_wrap hr {
+#right_menu_wrap h2 {
+  font-size: 30px;
+}
+
+#menu_wrap hr, #right_menu_wrap hr {
   display: block;
   height: 1px;
   border: 0;
@@ -64,15 +68,15 @@
   margin: 3px 0;
 }
 
-#menu_wrap .option, #left_menu_wrap .option {
+#menu_wrap .option, #right_menu_wrap .option {
   text-align: center;
 }
 
-#menu_wrap .option p, #left_menu_wrap .option p {
+#menu_wrap .option p, #right_menu_wrap .option p {
   margin: 10px 0;
 }
 
-#menu_wrap .option button, #left_menu_wrap .option button {
+#menu_wrap .option button, #right_menu_wrap .option button {
   margin-left: 5px;
 }
 
@@ -292,4 +296,8 @@
 
 .favorite-icon.favorited {
   color: gold;
+}
+
+#favoritesList li{
+  font-size: 20px;
 }

@@ -1,9 +1,20 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const mysql = require('mysql');
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.json());
 const port = 3000;
+
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'yourUsername',
+  password: '1234',
+  database: 'crimeDB'
+});
+
 
 app.use(cors());
 
