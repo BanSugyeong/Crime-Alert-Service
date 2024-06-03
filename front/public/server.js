@@ -15,32 +15,8 @@ const db = mysql.createConnection({
   database: 'crimeDB'
 });
 
+
 app.use(cors());
-
-db.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to database');
-});
-
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  db.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, results) => {
-      if (err) throw err;
-      if (results.length > 0) {
-          res.json({ status: 'ok', message: 'Login successful' });
-      } else {
-          res.status(401).json({ status: 'error', message: 'Invalid credentials' });
-      }
-  });
-});
-
-app.post('/favorites', (req, res) => {
-  const { user_id, district } = req.body;
-  db.query('INSERT INTO favorites (user_id, district) VALUES (?, ?)', [user_id, district], (err, result) => {
-      if (err) throw err;
-      res.json({ status: 'ok', message: 'Favorite added' });
-  });
-});
 
 app.get('/api/news', async (req, res) => {
   try {
