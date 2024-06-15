@@ -42,15 +42,21 @@ app.post('/signup', (req, res) => {
   // 사용자명 중복 확인
   const checkUserQuery = 'SELECT * FROM users WHERE username = ?';
   db.query(checkUserQuery, [username], (err, result) => {
-      if (err) throw err;
+      if (err) {
+          res.json({ success: false, message: 'Database query error' });
+          return;
+      }
       if (result.length > 0) {
-          res.send('Username already exists. Please choose a different username.');
+          res.json({ success: false, message: 'Username already exists. Please choose a different username.' });
       } else {
           // 사용자 정보 저장
           const insertQuery = 'INSERT INTO crimedb.users (username, password) VALUES (?, ?)';
           db.query(insertQuery, [username, hashedPassword], (err, result) => {
-              if (err) throw err;
-              res.send('Registration successful!');
+              if (err) {
+                  res.json({ success: false, message: 'Database insertion error' });
+                  return;
+              }
+              res.json({ success: true, message: 'Registration successful!' });
           });
       }
   });
@@ -63,7 +69,10 @@ app.post('/login', (req, res) => {
 
   const checkUserQuery = 'SELECT * FROM users WHERE username = ?';
   db.query(checkUserQuery, [username], (err, result) => {
-      if (err) throw err;
+      if (err) {
+          res.json({ success: false, message: 'Database query error' });
+          return;
+      }
       if (result.length > 0) {
           const user = result[0];
           if (bcrypt.compareSync(password, user.password)) {
