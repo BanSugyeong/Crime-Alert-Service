@@ -360,3 +360,53 @@
   width: 100%;
   background-color: #343a40;
 }
+
+.navbar-custom {
+  padding-top: 1px;
+  padding-bottom: 5px;
+}
+.navbar-brand {
+  font-size: 1.5rem; /* 로고 텍스트 크기 조정 */
+}
+.navbar-nav .nav-link {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.footer_section {
+  margin-top: 50px;
+}
+
+/* link
+.blog_box {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.blog_text {
+  margin-bottom: 20px;
+}
+.link_list {
+  list-style: none;
+  padding: 0;
+}
+.link_list li {
+  margin-bottom: 10px;
+}
+.link_list a {
+  text-decoration: none;
+  color: #007bff;
+}
+.link_list a:hover {
+  text-decoration: underline;
+}
+.news_item {
+  margin-bottom: 10px;
+}
+.news_title a {
+  text-decoration: none;
+  color: #007bff;
+}
+.news_title a:hover {
+  text-decoration: underline;
+} */
