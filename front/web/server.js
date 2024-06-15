@@ -1,9 +1,10 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const session = require('express-session');
+const db = require('./public/js/db'); // db.js 파일을 불러옴
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,24 +13,16 @@ const port = 3000;
 
 app.use(cors());
 
+// 세션 설정
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // https를 사용할 경우 true로 설정
+}));
+
 // 정적 파일 제공을 위해 public 디렉토리 설정
 app.use(express.static('public'));
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'crimedb'
-});
-
-// 데이터베이스 연결
-db.connect(err => {
-  if (err) {
-      console.error('Error connecting to the database: ' + err.stack);
-      return;
-  }
-  console.log('Connected to database as ID ' + db.threadId);
-});
 
 // 회원가입 처리
 app.post('/signup', (req, res) => {
@@ -76,6 +69,7 @@ app.post('/login', (req, res) => {
       if (result.length > 0) {
           const user = result[0];
           if (bcrypt.compareSync(password, user.password)) {
+              req.session.user = { id: user.user_id, username: user.username }; // 세션에 사용자 정보 저장
               res.json({ success: true, message: 'Login successful!' });
           } else {
               res.json({ success: false, message: 'Invalid username or password.' });
@@ -83,6 +77,62 @@ app.post('/login', (req, res) => {
       } else {
           res.json({ success: false, message: 'Invalid username or password.' });
       }
+  });
+});
+
+// 로그아웃 처리
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+      if (err) {
+          res.json({ success: false, message: 'Logout failed.' });
+      } else {
+          res.json({ success: true, message: 'Logout successful!' });
+      }
+  });
+});
+
+// 즐겨찾기 추가
+app.post('/favorites', (req, res) => {
+  const userId = req.session.user.id;
+  const { district } = req.body;
+
+  const insertQuery = 'INSERT INTO favorites (user_id, district) VALUES (?, ?)';
+  db.query(insertQuery, [userId, district], (err, result) => {
+    if (err) {
+      res.json({ success: false, message: 'Database insertion error' });
+      return;
+    }
+    res.json({ success: true, message: 'Favorite added successfully!' });
+  });
+});
+
+// 즐겨찾기 삭제
+app.delete('/favorites', (req, res) => {
+  const userId = req.session.user.id;
+  const { district } = req.body;
+
+  const deleteQuery = 'DELETE FROM favorites WHERE user_id = ? AND district = ?';
+  db.query(deleteQuery, [userId, district], (err, result) => {
+    if (err) {
+      res.json({ success: false, message: 'Database deletion error' });
+      return;
+    }
+    res.json({ success: true, message: 'Favorite removed successfully!' });
+  });
+});
+
+// 즐겨찾기 목록 불러오기
+app.get('/favorites', (req, res) => {
+  const userId = req.session.user.id;
+
+  const selectQuery = 'SELECT district FROM favorites WHERE user_id = ?';
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      res.json({ success: false, message: 'Database query error' });
+      return;
+    }
+    const favorites = result.map(row => row.district);
+    res.json({ success: true, favorites });
   });
 });
 
@@ -105,6 +155,24 @@ app.get('/api/news', async (req, res) => {
   } catch (error) {
     console.error('Error fetching news:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 로그인 상태 확인 미들웨어
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.json({ success: false, message: 'Not authenticated' });
+  }
+}
+
+// 로그인 상태를 반환하는 엔드포인트
+app.get('/is-authenticated', (req, res) => {
+  if (req.session.user) {
+    res.json({ authenticated: true });
+  } else {
+    res.json({ authenticated: false });
   }
 });
 

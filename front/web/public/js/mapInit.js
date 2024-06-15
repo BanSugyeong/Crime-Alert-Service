@@ -41,38 +41,78 @@ function hideModal() {
 }
 
 // 즐겨찾기 기능
-function checkIfFavorited(title) {
-    var favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    return favorites.includes(title);
+function checkIfFavorited(title, callback) {
+    fetch('/favorites')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                callback(data.favorites.includes(title));
+            } else {
+                callback(false);
+            }
+        });
 }
 
 function toggleFavorite(title, element) {
-    var favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    var index = favorites.indexOf(title);
-    
-    if (index > -1) {
-        favorites.splice(index, 1);
-        element.classList.remove('favorited');
-    } else {
-        favorites.push(title);
-        element.classList.add('favorited');
-    }
-    
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    updateFavoritesList();
+    checkIfFavorited(title, (isFavorited) => {
+        if (isFavorited) {
+            fetch('/favorites', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ district: title })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    element.classList.remove('favorited');
+                    updateFavoritesList();
+                } else {
+                    alert('Failed to remove favorite');
+                }
+            });
+        } else {
+            fetch('/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ district: title })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    element.classList.add('favorited');
+                    updateFavoritesList();
+                } else {
+                    alert('Failed to add favorite');
+                }
+            });
+        }
+    });
 }
 
 function updateFavoritesList() {
-    var favoritesList = document.getElementById('favoritesList');
-    var favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    
-    favoritesList.innerHTML = '';
-    favorites.forEach(function (title) {
-        var listItem = document.createElement('li');
-        listItem.textContent = title;
-        favoritesList.appendChild(listItem);
-    });
+    fetch('/favorites')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var favoritesList = document.getElementById('favoritesList');
+                favoritesList.innerHTML = '';
+                data.favorites.forEach(function (title) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = title;
+                    favoritesList.appendChild(listItem);
+                });
+            }
+        });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateFavoritesList();
+});
+
 
 // 지도 초기화 함수
 function initializeMap() {
