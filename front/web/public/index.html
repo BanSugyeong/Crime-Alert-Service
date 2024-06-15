@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>서울시 범죄 위험율 예측 서비스</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="css/bootstyles.css" rel="stylesheet" />
+    <!-- Kakao 지도 API 스크립트 추가 -->
+    
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#!">서울시 범죄율 예측 서비스</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="home.html">HOME</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" href="index.html">MAP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">LOGIN</a></li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+   
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="close-area" onclick="hideModal()">X</div>
+            <div class="content" id="modalContent"></div>
+        </div>
+    </div>
+    
+    <div class="map_wrap">
+        <div id="map" style="width:100%;height:100vh;position:relative;overflow:hidden;"></div>
+
+        <div id="right_menu_wrap" class="bg_white side_menu">
+            <h2>즐겨찾기</h2>
+            <hr>
+            <ul id="favoritesList"></ul>
+        </div>
+        
+        <div id="menu_wrap" class="bg_white">
+            <div class="option">
+                <form id="searchForm">
+                    키워드: <input type="text" id="keyword" size="27">
+                    <button type="button" onclick="searchPlaces()">검색하기</button>
+                </form>
+            </div>
+            <hr>
+            <div id="news-container">
+                <h2>오늘의 뉴스</h2>
+                <div id="news-list"></div>
+            </div>
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- script.js 및 mapInit.js 파일 포함 -->
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f5af0193d48f025964e7573bbe6bd44c&libraries=clusterer"></script>
+    <script src="./js/newsList.js"></script>
+    <script src="./js/mapInit.js"></script>
+</body>
+</html>
