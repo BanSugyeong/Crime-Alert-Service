@@ -40,7 +40,7 @@ app.post('/signup', (req, res) => {
           return;
       }
       if (result.length > 0) {
-          res.json({ success: false, message: 'Username already exists. Please choose a different username.' });
+          res.json({ success: false, message: '이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.' });
       } else {
           // 사용자 정보 저장
           const insertQuery = 'INSERT INTO crimedb.users (username, password) VALUES (?, ?)';
@@ -49,7 +49,7 @@ app.post('/signup', (req, res) => {
                   res.json({ success: false, message: 'Database insertion error' });
                   return;
               }
-              res.json({ success: true, message: 'Registration successful!' });
+              res.json({ success: true, message: '회원가입에 성공했습니다.' });
           });
       }
   });
@@ -70,12 +70,12 @@ app.post('/login', (req, res) => {
           const user = result[0];
           if (bcrypt.compareSync(password, user.password)) {
               req.session.user = { id: user.user_id, username: user.username }; // 세션에 사용자 정보 저장
-              res.json({ success: true, message: 'Login successful!' });
+              res.json({ success: true, message: '로그인에 성공했습니다!' });
           } else {
-              res.json({ success: false, message: 'Invalid username or password.' });
+              res.json({ success: false, message: '아이디 혹은 비밀번호가 틀렸습니다.' });
           }
       } else {
-          res.json({ success: false, message: 'Invalid username or password.' });
+          res.json({ success: false, message: '아이디 혹은 비밀번호가 틀렸습니다.' });
       }
   });
 });
@@ -86,7 +86,7 @@ app.post('/logout', (req, res) => {
       if (err) {
           res.json({ success: false, message: 'Logout failed.' });
       } else {
-          res.json({ success: true, message: 'Logout successful!' });
+          res.json({ success: true, message: '로그아웃에 성공했습니다.' });
       }
   });
 });
