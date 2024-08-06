@@ -27,36 +27,3 @@ async function displayNews() {
         newsListContainer.innerHTML = '<p>Error fetching news.</p>';
     }
 }
-
-
-// // 예제 뉴스 기사 데이터
-// const newsData = [
-//     { title: "Crime News 1", link: "https://news1.example.com" },
-//     { title: "Crime News 2", link: "https://news2.example.com" },
-//     { title: "Crime News 3", link: "https://news3.example.com" },
-// ];
-
-// // 뉴스 기사를 동적으로 추가하는 함수
-// function displayNews() {
-//     const newsList = document.getElementById('newsList');
-//     newsList.innerHTML = '';
-
-//     newsData.forEach(news => {
-//         const newsItem = document.createElement('div');
-//         newsItem.className = 'news_item';
-
-//         const newsTitle = document.createElement('h5');
-//         newsTitle.className = 'news_title';
-//         const newsLink = document.createElement('a');
-//         newsLink.href = news.link;
-//         newsLink.textContent = news.title;
-//         newsTitle.appendChild(newsLink);
-
-//         newsItem.appendChild(newsTitle);
-//         newsList.appendChild(newsItem);
-//     });
-// }
-
-// // 페이지 로드 시 뉴스 기사 표시
-// document.addEventListener('DOMContentLoaded', displayNews);
-

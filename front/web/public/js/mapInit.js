@@ -120,8 +120,7 @@ function initializeMap() {
     var mapContainer = document.getElementById('map');
     var mapOption = {
         center: new kakao.maps.LatLng(37.57346, 126.9790),
-        level: 8,
-        // mapTypeId: kakao.maps.MapTypeId.ROADMAP
+        level: 8
     };
 
     var map = new kakao.maps.Map(mapContainer, mapOption);
