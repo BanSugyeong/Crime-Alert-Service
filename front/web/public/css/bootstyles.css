@@ -112,11 +112,24 @@ hr {
   opacity: 0.25;
 }
 
-h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+h6, .h6, h5, .h5, h4, h4, h3, .h3, h2, .h2, h1, .h1 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
+}
+
+/* h4 태그의 기본 스타일 */
+.date_text {
+  font-size: 1.2rem; /* 적절한 글자 크기로 설정 */
+  font-weight: bold; /* 글자 굵기 설정 */
+  margin-bottom: 20px; /* prep_text와 간격을 두기 위한 아래쪽 마진 */
+}
+
+.prep_text {
+  font-size: 1.5rem; /* prep_text의 크기를 더 크게 설정 */
+  font-weight: normal; /* 굵기 설정 */
+  margin-top: 45px; /* date_text와의 간격을 위해 마진 조정 */
 }
 
 h1, .h1 {

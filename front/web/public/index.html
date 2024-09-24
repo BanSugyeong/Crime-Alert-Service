@@ -27,19 +27,7 @@
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
     <link href="css/bootstyles.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet"/>
-    <style>
-        .navbar-custom {
-            padding-top: 1px;
-            padding-bottom: 5px;
-        }
-        .navbar-brand {
-            font-size: 1.5rem; /* 로고 텍스트 크기 조정 */
-        }
-        .navbar-nav .nav-link {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-    </style>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
@@ -67,7 +55,7 @@
                             <div class="col-md-12">
                                 <div class="banner_taital_main">
                                     <h1 class="banner_taital">Crime <br>Prediction</h1>
-                                    <p class="banner_text">서울시 범죄 발생률과 범죄관련 뉴스, 즐겨찾기, 게시판 등의 기능 제공</p>
+                                    <!-- <p class="banner_text">서울시 범죄 발생률과 범죄관련 뉴스, 즐겨찾기, 게시판 등의 기능 제공</p> -->
                                     <div class="btn_main">
                                         <div class="about_bt active"><a href="#">About Us</a></div>
                                         <div class="callnow_bt"><a href="#">Call Now</a></div>
@@ -82,6 +70,77 @@
         <!-- banner section end -->
     </div>
     <!-- header section end -->
+
+
+    <!-- services section start -->
+    <div class="blog_section layout_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="about_taital">Our Services</h1>
+                </div>
+            </div>
+            <div class="blog_section_2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="blog_box fixed-box">
+                            <div class="blog_text">
+                                <h4 class="date_text">Link</h4>
+                                <h4 class="prep_text">Useful Links</h4>
+                                <p class="lorem_text">
+                                    <b>범죄 예방 관련 링크:</b>
+                                </p>
+                                </br>
+                                <ul class="link_list">
+                                    <li><a href="https://www.police.go.kr" class="styled-link">Police</a></li>
+                                    <li><a href="https://www.spo.go.kr" class="styled-link">Prosecutor's Office</a></li>
+                                    <li><a href="https://www.scourt.go.kr" class="styled-link">Court</a></li>
+                                    <li><a href="https://www.moj.go.kr" class="styled-link">Ministry of Justice</a></li>
+                                    <li><a href="https://www.kicj.re.kr/" class="styled-link">Researcher of Criminal Policy</a></li>
+                                    <li><a href="https://minwon.police.go.kr/" class="styled-link">Police of Complaint</a></li>
+                                    <li><a href="https://www.nia.or.kr/site/nia_kor/main.do" class="styled-link">Information Society</a></li>
+                                    <li><a href="https://www.mois.go.kr/frt/a01/frtMain.do" class="styled-link">Ministry of Security</a></li>
+                                </ul>
+                            </div>
+                            <!-- <div class="read_btn"><a href="#">Read More</a></div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="blog_box fixed-box">
+                            <div class="blog_text">
+                                <h4 class="date_text">Board</h4>
+                                <h4 class="prep_text">User Message Board</h4>
+                                <p class="lorem_text">
+                                    Stay updated with the latest crime news and reports:
+                                </p>
+                                </br>
+                                <div id="board-list" class="board_list">
+                                </div>
+                                <div id="write-button-container" style="display: none;">
+                                    <button id="write-button" class="btn btn-primary">작성</button>
+                                </div>
+                            </div>
+                            <!-- <div class="read_btn"><a href="#">Read More</a></div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 글 작성 Modal  start-->
+    <div id="write-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>글 작성</h2>
+            <textarea id="post-content" rows="4" cols="50"></textarea>
+            <button id="submit-post" class="btn btn-success">제출</button>
+        </div>
+    </div>
+    <!-- 글 작성 Modal  end-->
+    <!-- services section end -->
+
+
     <!-- client section start -->
     <div class="coffee_section layout_padding">
         <div class="container">
@@ -131,57 +190,8 @@
         </div>
     </div>
     <!-- client section end -->
-    <!-- services section start -->
-    <!-- <div class="blog_section layout_padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="about_taital">Our Services</h1>
-                </div>
-            </div>
-            <div class="blog_section_2">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="blog_box">
-                            <div class="blog_text">
-                                <h4 class="date_text">Link</h4>
-                                <h4 class="prep_text">Useful Links</h4>
-                                <p class="lorem_text">
-                                    Here are some useful links for more information on crime statistics and safety:
-                                </p>
-                                <ul class="link_list">
-                                    <li><a href="https://www.police.go.kr">Police</a></li>
-                                    <li><a href="https://www.spo.go.kr">Prosecutor's Office</a></li>
-                                    <li><a href="https://www.scourt.go.kr">Court</a></li>
-                                    <li><a href="https://www.moj.go.kr">Ministry of Justice</a></li>
-                                    <li><a href="https://www.kicj.re.kr/">Researsher of Criminal Policy</a></li>
-                                    <li><a href="https://minwon.police.go.kr/">Police of complaint</a></li>
-                                    <li><a href="https://www.nia.or.kr/site/nia_kor/main.do">Information Society</a></li>
-                                    <li><a href="https://www.mois.go.kr/frt/a01/frtMain.do">Ministry of Security</a></li>
-                                </ul>
-                            </div>
-                            <div class="read_btn"><a href="#">Read More</a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="blog_box">
-                            <div class="blog_text">
-                                <h4 class="date_text">News</h4>
-                                <h4 class="prep_text">Latest Crime News</h4>
-                                <p class="lorem_text">
-                                    Stay updated with the latest crime news and reports:
-                                </p>
-                                <div id="news-list" class="news_list">
-                                </div>
-                            </div>
-                            <div class="read_btn"><a href="#">Read More</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- services section end -->
+
+    
     <!-- footer section start -->
     <div class="footer_section layout_padding">
         <div class="container">
@@ -198,15 +208,11 @@
                     <div class="location_text">
                         <ul>
                             <li>
-                                <a href="https://github.com/BanSugyeong/CAPSTONE1.git">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i><span class="padding_left_10">https://github.com/BanSugyeong/CAPSTONE1.git</span>
+                                <a href="https://github.com/BanSugyeong/Crime-Alert-Service">
+                                    <i class="fa fa-envelope" aria-hidden="true"></i><span class="padding_left_10">Crime-Alert-Service</span>
                                 </a>
                             </li>
                         </ul>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="update_mail" placeholder="Your Email" rows="5" id="comment" name="Your Email"></textarea>
-                        <div class="subscribe_bt"><a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
                     </div>
                 </div>
             </div>
@@ -232,6 +238,7 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="js/plugin.js"></script>
+    <script src="js/board.js"></script>
     <!-- sidebar -->
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/custom.js"></script>

@@ -91,6 +91,47 @@ app.post('/logout', (req, res) => {
   });
 });
 
+// 게시글 작성 (로그인한 사용자만)
+app.post('/posts', (req, res) => {
+  if (!req.session.user) {
+    return res.json({ success: false, message: '로그인이 필요합니다.' });
+  }
+
+  const userId = req.session.user.id;
+  const { content } = req.body;
+
+  if (!content || content.trim() === '') {
+    return res.json({ success: false, message: '게시글 내용을 입력해주세요.' });
+  }
+
+  const insertQuery = 'INSERT INTO posts (user_id, content) VALUES (?, ?)';
+  db.query(insertQuery, [userId, content], (err, result) => {
+    if (err) {
+      res.json({ success: false, message: 'Database insertion error' });
+      return;
+    }
+    res.json({ success: true, message: '게시글이 성공적으로 등록되었습니다.' });
+  });
+});
+
+// 게시글 목록 불러오기
+app.get('/posts', (req, res) => {
+  const selectQuery = `
+    SELECT p.post_id, p.content, p.created_at, u.username
+    FROM posts p
+    JOIN users u ON p.user_id = u.user_id
+    ORDER BY p.created_at DESC
+  `;
+
+  db.query(selectQuery, (err, results) => {
+    if (err) {
+      res.json({ success: false, message: 'Database query error' });
+      return;
+    }
+    res.json({ success: true, posts: results });
+  });
+});
+
 // 즐겨찾기 추가
 app.post('/favorites', (req, res) => {
   const userId = req.session.user.id;
