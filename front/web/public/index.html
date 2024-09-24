@@ -110,11 +110,15 @@
                             <div class="blog_text">
                                 <h4 class="date_text">Board</h4>
                                 <h4 class="prep_text">User Message Board</h4>
-                                <p class="lorem_text">
+                                <!-- <p class="lorem_text">
                                     Stay updated with the latest crime news and reports:
-                                </p>
+                                </p> -->
                                 </br>
                                 <div id="board-list" class="board_list">
+                                    <div class="post-item">
+                                        <p><strong>사용자 이름</strong> <span class="date-text">(2024-09-25 12:34)</span></p>
+                                        <p>게시글 내용이 여기에 표시됩니다.</p>
+                                    </div>
                                 </div>
                                 <div id="write-button-container" style="display: none;">
                                     <button id="write-button" class="btn btn-primary">작성</button>
@@ -133,7 +137,8 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>글 작성</h2>
-            <textarea id="post-content" rows="4" cols="50"></textarea>
+            <input type="text" id="post-title" placeholder="제목을 입력하세요" required />
+            <textarea id="post-content" rows="4" cols="50" placeholder="내용을 입력하세요"></textarea>
             <button id="submit-post" class="btn btn-success">제출</button>
         </div>
     </div>

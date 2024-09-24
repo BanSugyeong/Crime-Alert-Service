@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const closeModal = document.getElementsByClassName('close')[0];
     const submitPost = document.getElementById('submit-post');
     const postContentInput = document.getElementById('post-content');
-    const newsList = document.getElementById('news-list');
+    const boardList = document.getElementById('board-list');
 
     // 로그인 상태 확인 함수
     function checkLoginStatus() {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    renderPosts(data.posts);
+                    renderPosts(data.posts); // 서버에서 받은 게시글 목록 렌더링
                 } else {
                     console.error('Error loading posts:', data.message);
                 }
@@ -35,19 +35,20 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Error fetching posts:', error));
     }
 
-    // 게시글을 화면에 표시
+    // 게시글을 화면에 렌더링
     function renderPosts(posts) {
-        newsList.innerHTML = '';
+        boardList.innerHTML = ''; // 기존 목록 비우기
         posts.forEach(post => {
             const postElement = document.createElement('div');
             postElement.className = 'post-item';
             postElement.innerHTML = `
-                <p><strong>${post.username}</strong> (${post.created_at})</p>
+                <h4>${post.title}</h4> <!-- 제목 추가 -->
                 <p>${post.content}</p>
+                <p><strong>${post.username}</strong> (${post.created_at})</p>
             `;
-            newsList.appendChild(postElement);
+            boardList.appendChild(postElement);
         });
-    }
+    }    
 
     // 게시글 작성 버튼 클릭 시 모달 표시
     writeButton.onclick = function() {
@@ -59,22 +60,31 @@ document.addEventListener("DOMContentLoaded", function() {
         writeModal.style.display = "none";
     }
 
-    // 게시글 제출 버튼 클릭 시
     submitPost.onclick = function() {
-        const postContent = postContentInput.value;
-        if (postContent.trim()) {
-            submitPostToServer(postContent);
+        const postTitle = document.getElementById('post-title').value; // 제목 가져오기
+        const postContent = postContentInput.value; // 내용 가져오기
+    
+        if (postTitle.trim() && postContent.trim()) {
+            submitPostToServer(postTitle, postContent); // 제목과 내용을 서버로 제출
         } else {
-            alert("글 내용을 입력해주세요.");
+            alert("제목과 내용을 모두 입력해주세요.");
         }
     }
+    
+   // 게시글 서버로 제출
+    function submitPostToServer() {
+        const postTitle = document.getElementById('post-title').value;
+        const postContent = postContentInput.value;
 
-    // 게시글 서버로 제출
-    function submitPostToServer(content) {
+        if (postTitle.trim() === '' || postContent.trim() === '') {
+            alert("제목과 내용을 모두 입력해주세요.");
+            return;
+        }
+
         fetch('/posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content })
+            body: JSON.stringify({ title: postTitle, content: postContent })
         })
         .then(response => response.json())
         .then(data => {
@@ -82,7 +92,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert(data.message);
                 writeModal.style.display = "none";
                 postContentInput.value = ''; // 입력 필드 초기화
+                document.getElementById('post-title').value = ''; // 제목 입력 필드 초기화
+                
+                // 새로운 게시글을 로드하여 목록에 추가
                 loadPosts(); // 게시글 목록 다시 불러오기
+                
+                // 새로 작성한 게시글을 목록에 추가
+                renderPosts([{ // 즉시 목록에 추가
+                    username: data.username || "Anonymous", // 작성자 이름 추가
+                    title: postTitle, // 제목 추가
+                    content: postContent,
+                    created_at: new Date().toLocaleString() // 현재 시간 추가
+                }, ...boardList.children]); // 기존 게시글 유지
             } else {
                 alert(data.message);
             }

@@ -94,30 +94,44 @@ app.post('/logout', (req, res) => {
 // 게시글 작성 (로그인한 사용자만)
 app.post('/posts', (req, res) => {
   if (!req.session.user) {
-    return res.json({ success: false, message: '로그인이 필요합니다.' });
+      return res.json({ success: false, message: '로그인이 필요합니다.' });
   }
 
   const userId = req.session.user.id;
-  const { content } = req.body;
+  const { title, content } = req.body;
 
-  if (!content || content.trim() === '') {
-    return res.json({ success: false, message: '게시글 내용을 입력해주세요.' });
+  if (!title || title.trim() === '') {
+      return res.json({ success: false, message: '제목을 입력해주세요.' });
   }
 
-  const insertQuery = 'INSERT INTO posts (user_id, content) VALUES (?, ?)';
-  db.query(insertQuery, [userId, content], (err, result) => {
-    if (err) {
-      res.json({ success: false, message: 'Database insertion error' });
-      return;
-    }
-    res.json({ success: true, message: '게시글이 성공적으로 등록되었습니다.' });
+  if (!content || content.trim() === '') {
+      return res.json({ success: false, message: '게시글 내용을 입력해주세요.' });
+  }
+
+  const insertQuery = 'INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)';
+  db.query(insertQuery, [userId, title, content], (err, result) => {
+      if (err) {
+          res.json({ success: false, message: 'Database insertion error' });
+          return;
+      }
+      
+      // 작성한 사용자 이름 가져오기
+      const selectQuery = 'SELECT username FROM users WHERE user_id = ?';
+      db.query(selectQuery, [userId], (err, result) => {
+          if (err) {
+              res.json({ success: false, message: 'Database query error' });
+              return;
+          }
+          const username = result[0].username; // 사용자 이름 가져오기
+          res.json({ success: true, message: '게시글이 성공적으로 등록되었습니다.', username });
+      });
   });
 });
 
 // 게시글 목록 불러오기
 app.get('/posts', (req, res) => {
   const selectQuery = `
-    SELECT p.post_id, p.content, p.created_at, u.username
+    SELECT p.post_id, p.title, p.content, p.created_at, u.username
     FROM posts p
     JOIN users u ON p.user_id = u.user_id
     ORDER BY p.created_at DESC
