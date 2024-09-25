@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/admin.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+</head>
+<body>
+    <!-- 상단바 시작 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">서울시 범죄율 예측 서비스</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- 상단바 끝 -->
+
+    <div class="container">
+        <h2>관리자 페이지</h2>
+
+        <div id="admin-login">
+            <label for="admin-id">관리자 아이디를 입력하세요:</label>
+            <input type="password" id="admin-id" placeholder="관리자 아이디">
+            <button id="admin-login-btn" class="btn btn-primary">로그인</button>
+        </div>
+
+        <div id="admin-content" style="display:none;">
+            <h3>회원가입 사용자 정보</h3>
+            <div id="user-info">
+                <!-- 사용자 정보 출력 -->
+            </div>
+
+            <h3>회원별 즐겨찾기</h3>
+            <div id="favorites-info">
+                <!-- 즐겨찾기 정보 출력 -->
+            </div>
+
+            <h3>회원 작성 게시글 정보</h3>
+            <div id="posts-info">
+                <!-- 게시글 정보 출력 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 시작 -->
+    <div class="footer_section layout_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="footer_social_icon">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="location_text">
+                        <ul>
+                            <li>
+                                <a href="https://github.com/BanSugyeong/Crime-Alert-Service">
+                                    <i class="fa fa-envelope" aria-hidden="true"></i><span class="padding_left_10">Crime-Alert-Service</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 푸터 끝 -->
+
+    <!-- Copyright Section -->
+    <div class="copyright_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="copyright_text">2020 All Rights Reserved. Design by <a href="https://html.design">Free Html Templates</a>
+                        Distribution by <a href="https://themewagon.com">ThemeWagon</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript files-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/plugin.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/custom.js"></script>
+</body>
+</html>

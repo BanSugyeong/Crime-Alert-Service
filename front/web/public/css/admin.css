@@ -1,0 +1,17 @@
+.container {
+    margin-top: 50px;
+}
+
+#admin-login {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#admin-content h3 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+#admin-content {
+    display: none;
+}
