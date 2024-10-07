@@ -91,6 +91,7 @@ app.post('/logout', (req, res) => {
   });
 });
 
+// board 관련 기능 시작
 // 게시글 작성 (로그인한 사용자만)
 app.post('/posts', (req, res) => {
   if (!req.session.user) {
@@ -145,7 +146,9 @@ app.get('/posts', (req, res) => {
     res.json({ success: true, posts: results });
   });
 });
+// board 관련 기능 끝
 
+// 즐겨찾기 관련 기능 시작
 // 즐겨찾기 추가
 app.post('/favorites', (req, res) => {
   const userId = req.session.user.id;
@@ -191,6 +194,69 @@ app.get('/favorites', (req, res) => {
   });
 });
 
+// 즐겨찾기 관련 기능 끝
+
+// 관리자 페이지 정보 시작
+// 사용자 정보 가져오기
+app.get('/api/admin/users', (req, res) => {
+  const query = 'SELECT user_id, username, created_at FROM users';
+  db.query(query, (err, results) => {
+      if (err) {
+          return res.json({ success: false, message: 'Database query error' });
+      }
+      res.json({ success: true, users: results });
+  });
+});
+
+// 즐겨찾기 정보 가져오기
+app.get('/api/admin/favorites', (req, res) => {
+  const query = 'SELECT user_id, district FROM favorites';
+  db.query(query, (err, results) => {
+      if (err) {
+          return res.json({ success: false, message: 'Database query error' });
+      }
+      res.json({ success: true, favorites: results });
+  });
+});
+
+// 게시글 정보 가져오기
+app.get('/api/admin/posts', (req, res) => {
+  const query = `
+      SELECT p.user_id, p.title, p.content, p.created_at
+      FROM posts p
+      JOIN users u ON p.user_id = u.user_id
+      ORDER BY p.created_at DESC
+  `;
+  db.query(query, (err, results) => {
+      if (err) {
+          return res.json({ success: false, message: 'Database query error' });
+      }
+      res.json({ success: true, posts: results });
+  });
+});
+
+// 관리자 데이터를 반환하는 엔드포인트
+app.get('/admin-data', (req, res) => {
+  const userQuery = 'SELECT user_id AS id, username, password FROM users';
+  const favoritesQuery = 'SELECT user_id, district FROM favorites';
+  const postsQuery = 'SELECT user_id, title, content, created_at FROM posts';
+
+  Promise.all([
+      new Promise((resolve, reject) => db.query(userQuery, (err, result) => err ? reject(err) : resolve(result))),
+      new Promise((resolve, reject) => db.query(favoritesQuery, (err, result) => err ? reject(err) : resolve(result))),
+      new Promise((resolve, reject) => db.query(postsQuery, (err, result) => err ? reject(err) : resolve(result)))
+  ])
+  .then(([users, favorites, posts]) => {
+      res.json({ success: true, data: { users, favorites, posts } });
+  })
+  .catch(err => {
+      console.error('Error fetching admin data:', err);
+      res.json({ success: false, message: '데이터 조회 중 오류 발생' });
+  });
+});
+
+// 관리자 페이지 정보 끝
+
 // 범죄관련 뉴스 불러오기
 app.get('/api/news', async (req, res) => {
   try {
@@ -234,3 +300,4 @@ app.get('/is-authenticated', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+

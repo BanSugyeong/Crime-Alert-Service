@@ -36,6 +36,18 @@
         </div>
 
         <div id="admin-content" style="display:none;">
+            <!-- 검색바 -->
+            <div id="search-bar" style="display: flex;"> <!-- 수정: 초기 display: flex로 설정 -->
+                <label for="search-input">사용자 아이디 검색:</label>
+                <input type="text" id="search-input" placeholder="아이디를 입력하세요">
+                <button id="search-btn" class="btn btn-primary">검색</button>
+            </div>
+
+            <!-- 사용자 정보 출력 영역 -->
+            <div id="search-results">
+                <!-- 검색 결과가 여기에 표시됩니다. -->
+            </div>
+
             <h3>회원가입 사용자 정보</h3>
             <div id="user-info">
                 <!-- 사용자 정보 출력 -->
@@ -51,6 +63,7 @@
                 <!-- 게시글 정보 출력 -->
             </div>
         </div>
+
     </div>
 
     <!-- 푸터 시작 -->
@@ -58,14 +71,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="footer_social_icon">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                        </ul>
-                    </div>
                     <div class="location_text">
                         <ul>
                             <li>
