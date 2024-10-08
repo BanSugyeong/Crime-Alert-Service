@@ -483,3 +483,16 @@
   color: #888; /* 날짜 색상 */
 }
 
+.weather-option {
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.weather-option:hover {
+  background-color: #f0f0f0;
+}
