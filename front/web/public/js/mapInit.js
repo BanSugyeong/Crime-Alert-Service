@@ -14,7 +14,7 @@ function showWeatherSelection(info) {
     modalContent.innerHTML = ''; // 기존 내용을 비움
 
     const weatherSelectionHtml = `
-        <h3>날씨를 선택하세요:</h3>
+        <h3>오늘의 날씨</h3>
         <div class="weather-option" onclick="selectWeather('clear', '${info.title}', '${info.details}')">맑음</div>
         <div class="weather-option" onclick="selectWeather('cloudy', '${info.title}', '${info.details}')">흐림</div>
         <div class="weather-option" onclick="selectWeather('rainy', '${info.title}', '${info.details}')">비</div>
@@ -28,24 +28,28 @@ function showWeatherSelection(info) {
 
 
 
-function selectWeather(weather, title, details) {
+function selectWeather(weather, title) {
     let newRate;
+    let details;
+
     switch (weather) {
         case 'clear':
-            newRate = "5.0%"; // 맑음에 대한 예시 범죄율
+            newRate = "5.0%";
+            details = '살인: 0.2%,<br> 강도: 0.1%,<br> 강간/강제추행: 3.5%,<br> 절도: 20.1%,<br> 폭력: 55.0%'; // 맑음에 대한 세부 정보
             break;
         case 'cloudy':
-            newRate = "7.0%"; // 흐림에 대한 예시 범죄율
+            newRate = "7.0%";
+            details = '살인: 0.3%,<br> 강도: 0.2%,<br> 강간/강제추행: 4.2%,<br> 절도: 25.4%,<br> 폭력: 60.0%'; // 흐림에 대한 세부 정보
             break;
         case 'rainy':
-            newRate = "10.0%"; // 비에 대한 예시 범죄율
+            newRate = "10.0%";
+            details = '살인: 0.5%,<br> 강도: 0.3%,<br> 강간/강제추행: 5.0%,<br> 절도: 30.8%,<br> 폭력: 65.0%'; // 비에 대한 세부 정보
             break;
     }
 
-    // 범죄율 정보 업데이트
     const modalContent = document.getElementById("modalContent");
     modalContent.innerHTML = `
-        <h1>${title} 범죄율</h1>
+        <h1>오늘의 ${title} 범죄율</h1>
         <h1 id="crimeRate" style="font-size: 50px;">"${newRate}"</h1><br>
         <h3>${details}</h3>
     `;
