@@ -24,6 +24,32 @@ app.use(session({
 // 정적 파일 제공을 위해 public 디렉토리 설정
 app.use(express.static('public'));
 
+
+app.get('/someRoute', (req, res) => {
+  const user = database.find(item => item.id === req.query.id);
+  // user가 undefined일 때 id에 접근하지 않도록 수정
+  if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  // id가 존재할 때 처리
+  res.json({ success: true, data: user });
+});
+
+app.get('/someRoute', (req, res) => {
+  console.log(req.query);  // query parameter 확인
+  const user = database.find(item => item.id === req.query.id);
+  console.log(user);       // user 객체 확인
+
+  if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+  }
+
+  res.json({ success: true, data: user });
+});
+
+
+
+
 // 회원가입 처리
 app.post('/signup', (req, res) => {
   const username = req.body.username;
@@ -261,7 +287,7 @@ app.get('/admin-data', (req, res) => {
 app.get('/api/news', async (req, res) => {
   try {
     const query = encodeURIComponent('범죄'); // 원하는 검색어로 변경
-    const apiUrl = `https://openapi.naver.com/v1/search/news.json?query=${query}&display=5`;
+    const apiUrl = `https://openapi.naver.com/v1/search/news.json?query=${query}&display=8`;
 
     // 네이버 API에 요청
     const response = await axios.get(apiUrl, {
@@ -278,6 +304,8 @@ app.get('/api/news', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 // 로그인 상태 확인 미들웨어
 function isAuthenticated(req, res, next) {
