@@ -39,16 +39,16 @@ function selectWeather(weather, title) {
 
     switch (weather) {
         case 'clear':
-            newRate = "5.0%";
-            details = '살인: 0.2%,<br> 강도: 0.1%,<br> 강간/강제추행: 3.5%,<br> 절도: 20.1%,<br> 폭력: 55.0%'; // 맑음에 대한 세부 정보
+            newRate = "1.5%";
+            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 0.9%,<br> 절도: 47.0%,<br> 폭력: 52.2%'; // 맑음에 대한 세부 정보
             break;
         case 'cloudy':
-            newRate = "7.0%";
-            details = '살인: 0.3%,<br> 강도: 0.2%,<br> 강간/강제추행: 4.2%,<br> 절도: 25.4%,<br> 폭력: 60.0%'; // 흐림에 대한 세부 정보
+            newRate = "8.6%";
+            details = '살인: 0.1%,<br> 강도: 0.2%,<br> 강간/강제추행: 6.7%,<br> 절도: 25.9%,<br> 폭력: 51.6%'; // 흐림에 대한 세부 정보
             break;
         case 'rainy':
-            newRate = "10.0%";
-            details = '살인: 0.5%,<br> 강도: 0.3%,<br> 강간/강제추행: 5.0%,<br> 절도: 30.8%,<br> 폭력: 65.0%'; // 비에 대한 세부 정보
+            newRate = "3.42%";
+            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 6.3%,<br> 절도: 27.1%,<br> 폭력: 54.2%'; // 비에 대한 세부 정보
             break;
     }
 
@@ -193,7 +193,6 @@ function updateFavoritesList() {
         console.error('Error updating favorites list:', error);
     });
 }
-
 
 // 지도 초기화 함수
 function initializeMap() {
