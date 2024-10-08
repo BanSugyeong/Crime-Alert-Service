@@ -4,10 +4,10 @@ function addClickEvent(marker, info) {
     });
 }
 
-// function showModalAndInfo(info) {
-//     showModal();
-//     updateModalContent(info);
-// }
+function showModalAndInfo(info) {
+    showModal();
+    updateModalContent(info);
+}
 
 // 날씨에 대한 범죄율 시작
 function showWeatherSelection(info) {
@@ -58,31 +58,53 @@ function selectWeather(weather, title) {
         <h1 id="crimeRate" style="font-size: 50px;">"${newRate}"</h1><br>
         <h3>${details}</h3>
     `;
+
+    // 즐겨찾기 아이콘 추가
+    updateModalContent({ title: title });
 }
 // 날씨에 대한 범죄율 끝
 
 
+function updateModalContent(info) {
+    console.log('updateModalContent called with:', info);
+    var modalContent = document.getElementById("modalContent");
+    
+    // 비동기적으로 즐겨찾기 상태를 체크
+    checkIfFavorited(info.title, (isFavorited) => {
+        console.log('Favorite check result:', isFavorited);
+        var starClass = isFavorited ? 'favorite-icon favorited' : 'favorite-icon';
 
-// function updateModalContent(info) {
-//     var modalContent = document.getElementById("modalContent");
-//     var isFavorited = checkIfFavorited(info.title);
-//     var starClass = isFavorited ? 'favorite-icon favorited' : 'favorite-icon';
+        modalContent.innerHTML += `
+            <div class="favorite-container">
+                <div class="${starClass}" id="favoriteIcon" onclick="toggleFavorite('${info.title}', this)">★</div>
+            </div>
+        `;
 
-//     modalContent.innerHTML = `
-//         <div class="favorite-container">
-//             <div class="${starClass}" id="favoriteIcon" onclick="toggleFavorite('${info.title}', this)">★</div>
-//         </div>
-//         <h1>${info.title} 범죄율</h1>
-//     `;
-// }
+        console.log('Modal content updated:', modalContent.innerHTML);
+    });
+}
 
-// // 체크할 부분은 그대로 유지
-// function checkIfFavorited(title) {
-//     // 비동기적으로 좋아요 체크하기 (예시, 실제 구현 필요)
-//     // 이 부분은 AJAX 요청이나 Fetch API 등을 사용하여 비동기로 처리해야 함.
-//     return false; // 기본값은 false로 설정
-// }
-
+// checkIfFavorited 함수도 수정 필요
+function checkIfFavorited(title, callback) {
+    fetch('/favorites')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                callback(data.favorites.includes(title));
+            } else {
+                callback(false);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            callback(false); // 에러 발생 시 기본값으로 false 설정
+        });
+}
 
 function bringModalToFront() {
     var modal = document.getElementById("modal");
@@ -116,63 +138,61 @@ function checkIfFavorited(title, callback) {
 
 function toggleFavorite(title, element) {
     checkIfFavorited(title, (isFavorited) => {
-        if (isFavorited) {
-            fetch('/favorites', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ district: title })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    element.classList.remove('favorited');
-                    updateFavoritesList();
-                } else {
-                    alert('Failed to remove favorite');
-                }
-            });
-        } else {
-            fetch('/favorites', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ district: title })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    element.classList.add('favorited');
-                    updateFavoritesList();
-                } else {
-                    alert('Failed to add favorite');
-                }
-            });
-        }
+        const method = isFavorited ? 'DELETE' : 'POST';
+
+        fetch('/favorites', {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ district: title })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                element.classList.toggle('favorited');
+                updateFavoritesList();
+            } else {
+                alert(data.message || 'Failed to update favorite');
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling favorite:', error);
+        });
     });
 }
 
 function updateFavoritesList() {
-    fetch('/favorites')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                var favoritesList = document.getElementById('favoritesList');
-                favoritesList.innerHTML = '';
-                data.favorites.forEach(function (title) {
-                    var listItem = document.createElement('li');
-                    listItem.textContent = title;
-                    favoritesList.appendChild(listItem);
-                });
-            }
-        });
+    fetch('/favorites', {
+        method: 'GET',
+        credentials: 'include' // 세션 쿠키 전송을 위해 추가
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            var favoritesList = document.getElementById('favoritesList');
+            favoritesList.innerHTML = '';
+            data.favorites.forEach(function (title) {
+                var listItem = document.createElement('li');
+                listItem.textContent = title;
+                favoritesList.appendChild(listItem);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error updating favorites list:', error);
+    });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    updateFavoritesList();
-});
 
 
 // 지도 초기화 함수

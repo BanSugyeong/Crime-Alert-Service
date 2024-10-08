@@ -174,6 +174,56 @@ app.get('/posts', (req, res) => {
 });
 // board 관련 기능 끝
 
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  } else {
+    res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+}
+
+// 인증 미들웨어가 필요한 라우트에 추가
+app.get('/favorites', isAuthenticated, (req, res) => {
+  const userId = req.session.user.id;
+  const selectQuery = 'SELECT district FROM favorites WHERE user_id = ?';
+  db.query(selectQuery, [userId], (err, result) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ success: false, message: 'Database query error' });
+    }
+    const favorites = result.map(row => row.district);
+    res.json({ success: true, favorites });
+  });
+});
+
+app.post('/favorites', isAuthenticated, (req, res) => {
+  const userId = req.session.user.id;
+  const { district } = req.body;
+
+  const insertQuery = 'INSERT INTO favorites (user_id, district) VALUES (?, ?)';
+  db.query(insertQuery, [userId, district], (err, result) => {
+    if (err) {
+      console.error('Database insertion error:', err);
+      return res.status(500).json({ success: false, message: 'Database insertion error' });
+    }
+    res.json({ success: true, message: 'Favorite added successfully!' });
+  });
+});
+
+app.delete('/favorites', isAuthenticated, (req, res) => {
+  const userId = req.session.user.id;
+  const { district } = req.body;
+
+  const deleteQuery = 'DELETE FROM favorites WHERE user_id = ? AND district = ?';
+  db.query(deleteQuery, [userId, district], (err, result) => {
+    if (err) {
+      console.error('Database deletion error:', err);
+      return res.status(500).json({ success: false, message: 'Database deletion error' });
+    }
+    res.json({ success: true, message: 'Favorite removed successfully!' });
+  });
+});
+
 // 즐겨찾기 관련 기능 시작
 // 즐겨찾기 추가
 app.post('/favorites', (req, res) => {
@@ -207,13 +257,17 @@ app.delete('/favorites', (req, res) => {
 
 // 즐겨찾기 목록 불러오기
 app.get('/favorites', (req, res) => {
-  const userId = req.session.user.id;
+  const userId = req.session.user && req.session.user.id;
+  
+  if (!userId) {
+    return res.status(401).json({ success: false, message: 'Unauthorized access' });
+  }
 
   const selectQuery = 'SELECT district FROM favorites WHERE user_id = ?';
   db.query(selectQuery, [userId], (err, result) => {
     if (err) {
-      res.json({ success: false, message: 'Database query error' });
-      return;
+      console.error('Database query error:', err);
+      return res.status(500).json({ success: false, message: 'Database query error' });
     }
     const favorites = result.map(row => row.district);
     res.json({ success: true, favorites });
