@@ -1,198 +1,5 @@
-function addClickEvent(marker, info) {
-    kakao.maps.event.addListener(marker, 'click', function () {
-        showWeatherSelection(info);
-    });
-}
-
-function showModalAndInfo(info) {
-    showModal();
-    updateModalContent(info);
-}
-
-// 날씨에 대한 범죄율 시작
-function showWeatherSelection(info) {
-    const modalContent = document.getElementById("modalContent");
-    modalContent.innerHTML = ''; // 기존 내용을 비움
-
-    const weatherSelectionHtml = `
-        <h3>오늘의 날씨</h3>
-        <br>
-        <br>
-        <div class="weather-option" onclick="selectWeather('clear', '${info.title}', '${info.details}')">맑음</div>
-        <br>
-        <div class="weather-option" onclick="selectWeather('cloudy', '${info.title}', '${info.details}')">흐림</div>
-        <br>
-        <div class="weather-option" onclick="selectWeather('rainy', '${info.title}', '${info.details}')">비</div>
-    `;
-    
-    modalContent.innerHTML += weatherSelectionHtml;
-
-    // 모달 표시
-    showModal();
-}
-
-
-
-function selectWeather(weather, title) {
-    let newRate;
-    let details;
-
-    switch (weather) {
-        case 'clear':
-            newRate = "1.5%";
-            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 0.9%,<br> 절도: 47.0%,<br> 폭력: 52.2%'; // 맑음에 대한 세부 정보
-            break;
-        case 'cloudy':
-            newRate = "8.6%";
-            details = '살인: 0.1%,<br> 강도: 0.2%,<br> 강간/강제추행: 6.7%,<br> 절도: 25.9%,<br> 폭력: 51.6%'; // 흐림에 대한 세부 정보
-            break;
-        case 'rainy':
-            newRate = "3.42%";
-            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 6.3%,<br> 절도: 27.1%,<br> 폭력: 54.2%'; // 비에 대한 세부 정보
-            break;
-    }
-
-    const modalContent = document.getElementById("modalContent");
-    modalContent.innerHTML = `
-        <h1>${title} 범죄율</h1>
-        <h1 id="crimeRate" style="font-size: 50px;">"${newRate}"</h1><br>
-        <h3>${details}</h3>
-    `;
-
-    // 즐겨찾기 아이콘 추가
-    updateModalContent({ title: title });
-}
-// 날씨에 대한 범죄율 끝
-
-
-function updateModalContent(info) {
-    console.log('updateModalContent called with:', info);
-    var modalContent = document.getElementById("modalContent");
-    
-    // 비동기적으로 즐겨찾기 상태를 체크
-    checkIfFavorited(info.title, (isFavorited) => {
-        console.log('Favorite check result:', isFavorited);
-        var starClass = isFavorited ? 'favorite-icon favorited' : 'favorite-icon';
-
-        modalContent.innerHTML += `
-            <div class="favorite-container">
-                <div class="${starClass}" id="favoriteIcon" onclick="toggleFavorite('${info.title}', this)">★</div>
-            </div>
-        `;
-
-        console.log('Modal content updated:', modalContent.innerHTML);
-    });
-}
-
-// checkIfFavorited 함수도 수정 필요
-function checkIfFavorited(title, callback) {
-    fetch('/favorites')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                callback(data.favorites.includes(title));
-            } else {
-                callback(false);
-            }
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            callback(false); // 에러 발생 시 기본값으로 false 설정
-        });
-}
-
-function bringModalToFront() {
-    var modal = document.getElementById("modal");
-    modal.style.zIndex = "9999"; // 또는 더 높은 숫자로 설정
-}
-
-// 모달을 표시하는 함수
-function showModal() {
-    var modal = document.getElementById("modal");
-    modal.style.display = "flex";
-}
-
-// 모달을 숨기는 함수
-function hideModal() {
-    var modal = document.getElementById("modal");
-    modal.style.display = "none";
-}
-
-// 즐겨찾기 기능
-function checkIfFavorited(title, callback) {
-    fetch('/favorites')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                callback(data.favorites.includes(title));
-            } else {
-                callback(false);
-            }
-        });
-}
-
-function toggleFavorite(title, element) {
-    checkIfFavorited(title, (isFavorited) => {
-        const method = isFavorited ? 'DELETE' : 'POST';
-
-        fetch('/favorites', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ district: title })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                element.classList.toggle('favorited');
-                updateFavoritesList();
-            } else {
-                alert(data.message || 'Failed to update favorite');
-            }
-        })
-        .catch(error => {
-            console.error('Error toggling favorite:', error);
-        });
-    });
-}
-
-function updateFavoritesList() {
-    fetch('/favorites', {
-        method: 'GET',
-        credentials: 'include' // 세션 쿠키 전송을 위해 추가
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            var favoritesList = document.getElementById('favoritesList');
-            favoritesList.innerHTML = '';
-            data.favorites.forEach(function (title) {
-                var listItem = document.createElement('li');
-                listItem.textContent = title;
-                favoritesList.appendChild(listItem);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error updating favorites list:', error);
-    });
-}
+var markers = [];
+var map;
 
 // 지도 초기화 함수
 function initializeMap() {
@@ -203,7 +10,7 @@ function initializeMap() {
         level:13
     };
 
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+    map = new kakao.maps.Map(mapContainer, mapOption);
 
     var clusterer = new kakao.maps.MarkerClusterer({
         map: map,
@@ -300,7 +107,7 @@ function initializeMap() {
     ];
 
 
-    var markers = [];
+    
 
     var 구_정보들 = [
         { title: '서울', rate: '8.6%', details: '살인: 0.1%,<br> 강도: 0.2%,<br> 강간/강제추행: 6.7%,<br> 절도: 25.9%,<br> 폭력: 51.6%' },
@@ -424,11 +231,272 @@ function initializeMap() {
 }
 
 
+// 검색 기능 활성화 함수
+function searchPlaces() {
+    const keyword = document.getElementById('title').value.trim(); // ID 변경
+
+    if (!keyword) {
+        alert('지역 이름을 입력해주세요!');
+        return;
+    }
+
+    // 키워드를 기반으로 장소 검색
+    const ps = new kakao.maps.services.Places();
+    ps.keywordSearch(keyword, placesSearchCB); // 콜백 함수로 연결합니다.
+}
+
+// 장소 검색 콜백 함수
+function placesSearchCB(data, status) {
+    if (status === kakao.maps.services.Status.OK) {
+        // 검색 결과로 첫 번째 장소를 선택하여 해당 위치로 지도를 이동하고 마커를 확대합니다.
+        const place = data[0];
+        const position = new kakao.maps.LatLng(place.y, place.x);
+
+        // 지도를 해당 위치로 이동 및 확대
+        map.setLevel(5); // 확대 수준 설정
+        map.setCenter(position);
+
+        // 해당 위치에 마커 추가
+        clearMarkers();
+        const marker = new kakao.maps.Marker({
+            map: map,
+            position: position
+        });
+        markers.push(marker);
+        
+        // 해당 마커에 클릭 이벤트 추가
+        kakao.maps.event.addListener(marker, 'click', function () {
+            showWeatherSelection({ title: place.place_name, details: '' });
+        });
+    } else {
+        alert('검색 결과가 없습니다.');
+    }
+}
+
+// 검색 버튼 클릭 시 호출될 함수
+function searchLocation() {
+    const query = document.getElementById('title').value.trim(); // ID 변경
+    if (!query) {
+        alert('주소 또는 장소명을 입력하세요.');
+        return;
+    }
+
+    // Geocoder 인스턴스 생성 및 검색
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(query, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            map.setCenter(coords);
+            map.setLevel(5); // 지도 확대 레벨 설정
+        } else {
+            alert('검색 결과가 없습니다.');
+        }
+    });
+}
+
+// 기존 마커 초기화 함수
+function clearMarkers() {
+    for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
+}
+
+
+
+function addClickEvent(marker, info) {
+    kakao.maps.event.addListener(marker, 'click', function () {
+        showWeatherSelection(info);
+    });
+}
+
+function showModalAndInfo(info) {
+    showModal();
+    updateModalContent(info);
+}
+
+// 날씨에 대한 범죄율 시작
+function showWeatherSelection(info) {
+    const modalContent = document.getElementById("modalContent");
+    modalContent.innerHTML = ''; // 기존 내용을 비움
+
+    const weatherSelectionHtml = `
+        <h3>오늘의 날씨</h3>
+        <br>
+        <br>
+        <div class="weather-option" onclick="selectWeather('clear', '${info.title}', '${info.details}')">맑음</div>
+        <br>
+        <div class="weather-option" onclick="selectWeather('cloudy', '${info.title}', '${info.details}')">흐림</div>
+        <br>
+        <div class="weather-option" onclick="selectWeather('rainy', '${info.title}', '${info.details}')">비</div>
+    `;
+    
+    modalContent.innerHTML += weatherSelectionHtml;
+
+    // 모달 표시
+    showModal();
+}
+
+
+
+function selectWeather(weather, title) {
+    let newRate;
+    let details;
+
+    switch (weather) {
+        case 'clear':
+            newRate = "1.5%";
+            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 0.9%,<br> 절도: 47.0%,<br> 폭력: 52.2%'; // 맑음에 대한 세부 정보
+            break;
+        case 'cloudy':
+            newRate = "8.6%";
+            details = '살인: 0.1%,<br> 강도: 0.2%,<br> 강간/강제추행: 6.7%,<br> 절도: 25.9%,<br> 폭력: 51.6%'; // 흐림에 대한 세부 정보
+            break;
+        case 'rainy':
+            newRate = "3.42%";
+            details = '살인: 0.0%,<br> 강도: 0.0%,<br> 강간/강제추행: 6.3%,<br> 절도: 27.1%,<br> 폭력: 54.2%'; // 비에 대한 세부 정보
+            break;
+    }
+
+    const modalContent = document.getElementById("modalContent");
+    modalContent.innerHTML = `
+        <h1>${title} 범죄율</h1>
+        <h1 id="crimeRate" style="font-size: 50px;">"${newRate}"</h1><br>
+        <h3>${details}</h3>
+    `;
+
+    // 즐겨찾기 아이콘 추가
+    updateModalContent({ title: title });
+}
+// 날씨에 대한 범죄율 끝
+
+
+function updateModalContent(info) {
+    console.log('updateModalContent called with:', info);
+    var modalContent = document.getElementById("modalContent");
+    
+    // 비동기적으로 즐겨찾기 상태를 체크
+    checkIfFavorited(info.title, (isFavorited) => {
+        console.log('Favorite check result:', isFavorited);
+        var starClass = isFavorited ? 'favorite-icon favorited' : 'favorite-icon';
+
+        modalContent.innerHTML += `
+            <div class="favorite-container">
+                <div class="${starClass}" id="favoriteIcon" onclick="toggleFavorite('${info.title}', this)">★</div>
+            </div>
+        `;
+
+        console.log('Modal content updated:', modalContent.innerHTML);
+    });
+}
+
+function bringModalToFront() {
+    var modal = document.getElementById("modal");
+    modal.style.zIndex = "9999"; // 또는 더 높은 숫자로 설정
+}
+
+// 모달을 표시하는 함수
+function showModal() {
+    var modal = document.getElementById("modal");
+    modal.style.display = "flex";
+}
+
+// 모달을 숨기는 함수
+function hideModal() {
+    var modal = document.getElementById("modal");
+    modal.style.display = "none";
+}
+
+// 즐겨찾기 기능
+function checkIfFavorited(title, callback) {
+    fetch('/favorites')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                callback(data.favorites.includes(title));
+            } else {
+                callback(false);
+            }
+        });
+}
+
+function toggleFavorite(title, element) {
+    checkIfFavorited(title, (isFavorited) => {
+        const method = isFavorited ? 'DELETE' : 'POST';
+
+        fetch('/favorites', {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ district: title })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                element.classList.toggle('favorited');
+                updateFavoritesList();
+            } else {
+                alert(data.message || 'Failed to update favorite');
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling favorite:', error);
+        });
+    });
+}
+
+function updateFavoritesList() {
+    fetch('/favorites', {
+        method: 'GET',
+        credentials: 'include' // 세션 쿠키 전송을 위해 추가
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            var favoritesList = document.getElementById('favoritesList');
+            favoritesList.innerHTML = '';
+            data.favorites.forEach(function (title) {
+                var listItem = document.createElement('li');
+                listItem.textContent = title;
+                favoritesList.appendChild(listItem);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error updating favorites list:', error);
+    });
+}
+
+// window.map = null;
+
+
+// DOMContentLoaded 이벤트 이후에 검색 기능을 초기화
+document.addEventListener('DOMContentLoaded', function () {
+    initializeMap(); // 지도 초기화
+    document.getElementById('searchForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // 폼 제출 기본 동작을 막음
+        searchPlaces(); // 검색 기능 실행
+    });
+
+    
+});
+
 // 페이지 로드 시 뉴스 표시
 window.onload = function () {
     displayNews();
     bringModalToFront(); // 기존 로직 추가
-    initializeMap(); // 지도 초기화 함수 호출
+    // initializeMap(); // 지도 초기화 함수 호출
     updateFavoritesList(); //즐겨찾기
 };
 

@@ -42,6 +42,16 @@
         
         <div id="menu_wrap" class="bg_white">
             <div id="news-container">
+                <div class="option">
+                    <!-- 기존 검색 바와 통합된 새 검색 바 -->
+                    <form id="searchForm">
+                        <div class="search-bar">
+                            <input type="text" id="title" placeholder="주소 또는 장소명을 입력하세요" />
+                            <button type="submit">검색</button>
+                        </div>
+                    </form>
+                </div>
+                <hr>
                 <h2>오늘의 뉴스</h2>
                 <br>
                 <div id="news-list"></div>
@@ -53,7 +63,9 @@
 
     <!-- script.js 및 mapInit.js 파일 포함 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f5af0193d48f025964e7573bbe6bd44c&libraries=clusterer"></script>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f5af0193d48f025964e7573bbe6bd44c&libraries=services"></script>
     <script src="./js/newsList.js"></script>
     <script src="./js/mapInit.js"></script>
+    <!-- <script src="./js/search.js"></script> -->
 </body>
 </html>
