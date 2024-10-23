@@ -509,7 +509,7 @@
 }
 
 #region-select option:checked {
-  background-color: #007bff; /* 선택된 옵션의 배경색 */
+  background-color: #dc3545; /* 선택된 옵션의 배경색 */
   color: white; /* 선택된 옵션의 텍스트 색상 */
 }
 
@@ -518,4 +518,17 @@
   padding: 15px;
   border-radius: 5px;
   background-color: #f1f1f1;
+}
+
+
+.news-item {
+  border: 1px solid #dc3545; /* 경계선 색상 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  padding: 15px; /* 안쪽 여백 */
+  margin-bottom: 20px; /* 아래쪽 여백 */
+  background-color: #f8f9fa; /* 배경색 */
+  max-width: 400px; /* 최대 너비 설정 */
+  max-height: 400px; /* 최대 높이 설정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }

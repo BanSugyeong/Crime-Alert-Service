@@ -1,5 +1,7 @@
 const express = require('express');
 const axios = require('axios');
+const cheerio = require('cheerio');
+const moment = require('moment');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
@@ -336,6 +338,60 @@ app.get('/admin-data', (req, res) => {
 });
 
 // 관리자 페이지 정보 끝
+
+
+app.get('/api/news', async (req, res) => {
+  const { region, keyword } = req.query;
+
+  const apiUrl = `https://openapi.naver.com/v1/search/news.json?query=${encodeURIComponent(region + ' ' + keyword)}&display=2&sort=sim`;
+
+  try {
+      const response = await fetch(apiUrl, {
+          headers: {
+              'X-Naver-Client-Id': '5oIL_w5BuIcEHWvjc93X', // 여기에 올바른 Client ID 입력
+              'X-Naver-Client-Secret': 'MR7PIBr8gt' // 여기에 올바른 Client Secret 입력
+          }
+      });
+      
+      // API 응답 확인
+      if (!response.ok) {
+          const errorResponse = await response.json();
+          console.error('Naver API error:', errorResponse);
+          return res.status(response.status).json({ success: false, message: errorResponse.errorMessage });
+      }
+
+      const newsData = await response.json();
+
+      if (newsData.items && newsData.items.length > 0) {
+          const filteredNews = newsData.items; // 뉴스 필터링 로직 추가 가능
+          res.json({ success: true, news: filteredNews });
+      } else {
+          res.json({ success: false, message: 'No news found' });
+      }
+  } catch (error) {
+      console.error('Error fetching news from Naver API:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
+// 뉴스 내용을 스크래핑하는 함수
+async function scrapeNewsContent(url) {
+  try {
+      const { data } = await axios.get(url);
+      const $ = cheerio.load(data);
+      
+      // 제목, 이미지, 본문 내용 가져오기
+      const title = $('h3').text(); // 뉴스 제목
+
+      return { title, link: url }; // 뉴스 내용 반환
+  } catch (error) {
+      console.error('Error scraping news content:', error);
+      return null; // 오류 시 null 반환
+  }
+}
+
+
 
 // 범죄관련 뉴스 불러오기
 app.get('/api/news', async (req, res) => {

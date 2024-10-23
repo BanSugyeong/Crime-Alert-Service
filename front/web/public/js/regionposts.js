@@ -5,19 +5,31 @@ document.getElementById('submit-button').addEventListener('click', function() {
     const regionInfo = document.getElementById('region-info');
     const infoBox = document.getElementById('info-box');
 
-    const regionData = {
-        seoul: '서울: 대한민국의 수도이며, 다양한 문화와 역사를 자랑합니다.',
-        busan: '부산: 해양 도시로 유명하며, 해운대와 광안리가 있습니다.',
-        incheon: '인천: 인천국제공항이 위치한 도시로, 다채로운 볼거리가 많습니다.',
-        daegu: '대구: 대구는 텃세와 전통 시장이 유명한 도시입니다.',
-        jeju: '제주도: 아름다운 자연경관과 독특한 문화가 있는 섬입니다.'
-    };
+    // 지역에 대한 뉴스 가져오기
+    fetch(`/api/news?region=${selectedRegion}&keyword=범죄`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const newsList = data.news;
+                regionInfo.innerHTML = ''; // 기존 내용 초기화
 
-    if (selectedRegion in regionData) {
-        regionInfo.textContent = regionData[selectedRegion];
-        infoBox.style.display = 'block';
-    } else {
-        regionInfo.textContent = '';
-        infoBox.style.display = 'none';
-    }
+                newsList.forEach(news => {
+                    regionInfo.innerHTML += `
+                        <div class="news-item">
+                            <strong>${news.title}</strong><br>
+                            <br><a href="${news.link}" target="_blank">원문 보러 가기</a>
+                        </div>
+                    `;
+                });
+                infoBox.style.display = 'block';
+            } else {
+                regionInfo.textContent = '관련 뉴스가 없습니다.';
+                infoBox.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching news:', error);
+            regionInfo.textContent = '뉴스를 가져오는 중 오류가 발생했습니다.';
+            infoBox.style.display = 'block';
+        });
 });
