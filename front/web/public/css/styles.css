@@ -520,6 +520,29 @@
   background-color: #f1f1f1;
 }
 
+.chart-container {
+  width: 300px; /* 차트의 고정 크기 */
+  height: 300px; /* 차트 높이 고정 */
+  margin-right: 20px; /* 텍스트와의 여백 */
+}
+
+#crime-chart {
+  width: 100%; /* 차트 캔버스의 크기 */
+  height: 100%;
+}
+
+.chart-data {
+  width: 100px; /* 범죄 수치 텍스트의 고정 너비 */
+  font-size: 16px;
+  text-align: right;
+  padding-left: 5px; /* 차트와 텍스트 사이의 간격 조정 */
+  margin-top: 80px; /* 요소를 아래로 이동 */
+}
+
+.chart-data-item {
+  margin-bottom: 10px; /* 각 범죄 유형의 여백 */
+}
+
 
 .news-item {
   border: 1px solid #dc3545; /* 경계선 색상 */

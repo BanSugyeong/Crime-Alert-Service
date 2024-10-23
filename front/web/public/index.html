@@ -151,8 +151,14 @@
                                 
 
                                 <!-- 게시글 내용이 표시될 부분 -->
-                                <div id="info-box" class="info-box" style="display: none; margin-top: 20px; height: auto;">
-                                    <p id="region-info"></p>
+                                <div id="info-box" class="info-box" style="display: none; margin-top: 20px;">
+                                    <p id="region-info" style="flex: 1;"></p>
+                                    <!-- 차트를 표시할 영역 -->
+                                    <div class="chart-container">
+                                        <canvas id="crime-chart"></canvas>
+                                    </div>
+                                    <!-- 범죄 수치를 텍스트로 표시할 영역 -->
+                                    <div id="crime-data-text" class="chart-data"></div>
                                 </div>
                             </div>
                         </div>
@@ -278,6 +284,7 @@
     <script src="js/plugin.js"></script>
     <script src="js/board.js"></script>
     <script src="js/regionposts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- sidebar -->
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/custom.js"></script>
