@@ -497,27 +497,25 @@
   background-color: #f0f0f0;
 }
 
-/* 검색창 스타일 */
-.search-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px;
-}
 
-.search-bar input {
-  width: 200px;
-  padding: 8px;
+
+
+#region-select {
+  padding: 10px;
+  font-size: 16px;
   border-radius: 4px;
   border: 1px solid #ccc;
+  width: 100%;
 }
 
-.search-bar button {
-  margin-left: 8px;
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
+#region-select option:checked {
+  background-color: #007bff; /* 선택된 옵션의 배경색 */
+  color: white; /* 선택된 옵션의 텍스트 색상 */
+}
+
+.info-box {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
 }
